@@ -25,6 +25,12 @@ namespace CentralMed.Data
 
                 try
                 {
+                    this.Database.ExecuteSqlCommand("ALTER TABLE [BillingRecord] RENAME COLUMN [Scheme] TO [Schedule];");
+                }
+                catch { }
+
+                try
+                {
                     this.BillingRecords.Take(1).ToList();
                 }
                 catch (Exception)
@@ -40,7 +46,7 @@ namespace CentralMed.Data
                                 [BillDate] DATETIME NOT NULL,
                                 [Qty] INTEGER NOT NULL,
                                 [DrugName] NVARCHAR(255),
-                                [Scheme] NVARCHAR(255),
+                                [Schedule] NVARCHAR(255),
                                 [Manufacturer] NVARCHAR(255),
                                 [BatchNo] NVARCHAR(100),
                                 [ExpiryDate] NVARCHAR(100),

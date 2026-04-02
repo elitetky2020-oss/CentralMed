@@ -178,7 +178,7 @@ namespace CentralMed.UI
                     hasItems = true;
 
                     string drugName = Convert.ToString(row.Cells["DrugName"].Value ?? "").Trim();
-                    string scheme = Convert.ToString(row.Cells["Scheme"].Value ?? "").Trim();
+                    string schedule = Convert.ToString(row.Cells["Schedule"].Value ?? "").Trim();
                     string manufacturer = Convert.ToString(row.Cells["Manufacturer"].Value ?? "").Trim();
                     string batchNo = Convert.ToString(row.Cells["BatchNo"].Value ?? "").Trim();
                     string expiry = Convert.ToString(row.Cells["Expiry"].Value ?? "").Trim();
@@ -187,7 +187,7 @@ namespace CentralMed.UI
                     string strDiscount = Convert.ToString(row.Cells["Discount"].Value ?? "").Trim();
                     string strAmount = Convert.ToString(row.Cells["Amount"].Value ?? "").Trim();
 
-                    if (string.IsNullOrEmpty(drugName) || string.IsNullOrEmpty(scheme) || 
+                    if (string.IsNullOrEmpty(drugName) || string.IsNullOrEmpty(schedule) || 
                         string.IsNullOrEmpty(manufacturer) || string.IsNullOrEmpty(batchNo) || 
                         string.IsNullOrEmpty(expiry) || string.IsNullOrEmpty(strQty) || 
                         string.IsNullOrEmpty(strRate) || string.IsNullOrEmpty(strDiscount) || 
@@ -239,7 +239,7 @@ namespace CentralMed.UI
                         BillDate = bDate,
                         Qty = qty,
                         DrugName = drugName,
-                        Scheme = scheme,
+                        Schedule = schedule,
                         Manufacturer = manufacturer,
                         BatchNo = batchNo,
                         ExpiryDate = expiry,
@@ -348,8 +348,8 @@ namespace CentralMed.UI
             graphics.DrawString("--------------------------------------------------------------------------------", font, Brushes.Black, startX, startY + offset);
             
             offset += (int)fontHeight + 5;
-            // Qty(4) Drug(15) Sche(8) Mfrs(10) No(8) DE(7) Rate(8) Disc(6) Amount(10)
-            graphics.DrawString("Qty".PadRight(4) + "Drug Name".PadRight(15) + "Sche".PadRight(8) + "Mfrs".PadRight(10) + "No".PadRight(8) + "DE".PadRight(7) + "Rate".PadRight(8) + "Disc".PadRight(6) + "Amount", boldFont, Brushes.Black, startX, startY + offset);
+            // Qty(4) Drug(15) Schd(8) Mfrs(10) No(8) DE(7) Rate(8) Disc(6) Amount(10)
+            graphics.DrawString("Qty".PadRight(4) + "Drug Name".PadRight(15) + "Schd".PadRight(8) + "Mfrs".PadRight(10) + "No".PadRight(8) + "DE".PadRight(7) + "Rate".PadRight(8) + "Disc".PadRight(6) + "Amount", boldFont, Brushes.Black, startX, startY + offset);
             
             offset += (int)fontHeight + 5;
             graphics.DrawString("--------------------------------------------------------------------------------", font, Brushes.Black, startX, startY + offset);
@@ -363,8 +363,8 @@ namespace CentralMed.UI
                 string name = Convert.ToString(row.Cells["DrugName"].Value ?? "");
                 if (name.Length > 13) name = name.Substring(0, 13);
                 
-                string scheme = Convert.ToString(row.Cells["Scheme"].Value ?? "");
-                if (scheme.Length > 6) scheme = scheme.Substring(0, 6);
+                string schedule = Convert.ToString(row.Cells["Schedule"].Value ?? "");
+                if (schedule.Length > 6) schedule = schedule.Substring(0, 6);
                 
                 string mfrs = Convert.ToString(row.Cells["Manufacturer"].Value ?? "");
                 if (mfrs.Length > 8) mfrs = mfrs.Substring(0, 8);
@@ -380,7 +380,7 @@ namespace CentralMed.UI
                 string amt = Convert.ToDecimal(row.Cells["Amount"].Value ?? 0).ToString("0.00");
 
                 offset += (int)fontHeight + 5;
-                graphics.DrawString(qty.PadRight(4) + name.PadRight(15) + scheme.PadRight(8) + mfrs.PadRight(10) + batch.PadRight(8) + expiry.PadRight(7) + rate.PadRight(8) + discount.PadRight(6) + amt, font, Brushes.Black, startX, startY + offset);
+                graphics.DrawString(qty.PadRight(4) + name.PadRight(15) + schedule.PadRight(8) + mfrs.PadRight(10) + batch.PadRight(8) + expiry.PadRight(7) + rate.PadRight(8) + discount.PadRight(6) + amt, font, Brushes.Black, startX, startY + offset);
             }
 
             offset += 15;

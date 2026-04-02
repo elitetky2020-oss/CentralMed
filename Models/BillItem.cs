@@ -21,7 +21,7 @@ namespace CentralMed.Models
         public decimal Amount { get; set; }
         
         [StringLength(255)]
-        public string Scheme { get; set; }
+        public string Schedule { get; set; }
 
         [ForeignKey("BillID")]
         public virtual Bill Bill { get; set; }

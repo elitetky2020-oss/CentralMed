@@ -14,7 +14,7 @@ namespace CentralMed.Models
         
         public int Qty { get; set; }
         public string DrugName { get; set; }
-        public string Scheme { get; set; }
+        public string Schedule { get; set; }
         public string Manufacturer { get; set; }
         public string BatchNo { get; set; }
         public string ExpiryDate { get; set; }

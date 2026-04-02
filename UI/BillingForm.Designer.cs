@@ -26,7 +26,7 @@ namespace CentralMed.UI
             this.dgvBillItems = new System.Windows.Forms.DataGridView();
             this.Qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DrugName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Scheme = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Schedule = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BatchNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Expiry = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -116,7 +116,7 @@ namespace CentralMed.UI
             this.dgvBillItems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Qty,
             this.DrugName,
-            this.Scheme,
+            this.Schedule,
             this.Manufacturer,
             this.BatchNo,
             this.Expiry,
@@ -145,11 +145,11 @@ namespace CentralMed.UI
             this.DrugName.Name = "DrugName";
             this.DrugName.Width = 150;
             // 
-            // Scheme
+            // Schedule
             // 
-            this.Scheme.HeaderText = "Scheme";
-            this.Scheme.Name = "Scheme";
-            this.Scheme.Width = 80;
+            this.Schedule.HeaderText = "Schedule";
+            this.Schedule.Name = "Schedule";
+            this.Schedule.Width = 80;
             // 
             // Manufacturer
             // 
@@ -304,7 +304,7 @@ namespace CentralMed.UI
         
         private System.Windows.Forms.DataGridViewTextBoxColumn Qty;
         private System.Windows.Forms.DataGridViewTextBoxColumn DrugName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Scheme;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Schedule;
         private System.Windows.Forms.DataGridViewTextBoxColumn Manufacturer;
         private System.Windows.Forms.DataGridViewTextBoxColumn BatchNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn Expiry;
