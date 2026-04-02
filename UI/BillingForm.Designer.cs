@@ -127,6 +127,9 @@ namespace CentralMed.UI
             this.BatchID});
             this.dgvBillItems.Location = new System.Drawing.Point(15, 75);
             this.dgvBillItems.Name = "dgvBillItems";
+            this.dgvBillItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvBillItems.Size = new System.Drawing.Size(773, 250);
             this.dgvBillItems.TabIndex = 8;
             // 
@@ -202,6 +205,7 @@ namespace CentralMed.UI
             this.lblTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.Location = new System.Drawing.Point(400, 340);
             this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTotal.Size = new System.Drawing.Size(110, 24);
             this.lblTotal.TabIndex = 9;
             this.lblTotal.Text = "Total: 0.00";
@@ -210,6 +214,7 @@ namespace CentralMed.UI
             // 
             this.btnSave.Location = new System.Drawing.Point(713, 335);
             this.btnSave.Name = "btnSave";
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.Size = new System.Drawing.Size(75, 35);
             this.btnSave.TabIndex = 10;
             this.btnSave.Text = "Save Bill";
@@ -220,6 +225,7 @@ namespace CentralMed.UI
             // 
             this.btnPrint.Location = new System.Drawing.Point(632, 335);
             this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPrint.Size = new System.Drawing.Size(75, 35);
             this.btnPrint.TabIndex = 11;
             this.btnPrint.Text = "Print and Save";
@@ -230,22 +236,26 @@ namespace CentralMed.UI
             this.lblGiven.AutoSize = true;
             this.lblGiven.Location = new System.Drawing.Point(12, 345);
             this.lblGiven.Name = "lblGiven";
+            this.lblGiven.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblGiven.Size = new System.Drawing.Size(77, 13);
             this.lblGiven.Text = "Amount Given:";
             // txtGiven
             this.txtGiven.Location = new System.Drawing.Point(95, 342);
             this.txtGiven.Name = "txtGiven";
+            this.txtGiven.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtGiven.Size = new System.Drawing.Size(80, 20);
             this.txtGiven.TextChanged += new System.EventHandler(this.txtGiven_TextChanged);
             // lblBalance
             this.lblBalance.AutoSize = true;
             this.lblBalance.Location = new System.Drawing.Point(190, 345);
             this.lblBalance.Name = "lblBalance";
+            this.lblBalance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblBalance.Size = new System.Drawing.Size(49, 13);
             this.lblBalance.Text = "Balance:";
             // txtBalance
             this.txtBalance.Location = new System.Drawing.Point(245, 342);
             this.txtBalance.Name = "txtBalance";
+            this.txtBalance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtBalance.Size = new System.Drawing.Size(80, 20);
             this.txtBalance.ReadOnly = true;
             this.txtBalance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
