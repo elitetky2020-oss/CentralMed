@@ -24,6 +24,11 @@ namespace CentralMed.UI
             dtpDate.Value = DateTime.Now;
 
             dgvBillItems.CellValueChanged += DgvBillItems_CellValueChanged;
+            dgvBillItems.CellValidating += DgvBillItems_CellValidating;
+            dgvBillItems.DataError += (s, ev) => 
+            {
+                ev.ThrowException = false;
+            };
             dgvBillItems.RowsRemoved += (s, ev) => UpdateBillTotal();
             dgvBillItems.CurrentCellDirtyStateChanged += (s, ev) => 
             {
@@ -34,44 +39,101 @@ namespace CentralMed.UI
             };
         }
 
+        private void DgvBillItems_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (dgvBillItems.Rows[e.RowIndex].IsNewRow) return;
+
+            string colName = dgvBillItems.Columns[e.ColumnIndex].Name;
+            string value = Convert.ToString(e.FormattedValue).Trim();
+
+            if (string.IsNullOrEmpty(value)) return;
+
+            try
+            {
+                if (colName == "Qty")
+                {
+                    if (!int.TryParse(value, out _))
+                    {
+                        MessageBox.Show("Quantity must be a valid integer.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true;
+                    }
+                }
+                else if (colName == "Rate" || colName == "Discount" || colName == "Amount")
+                {
+                    if (!decimal.TryParse(value, out _))
+                    {
+                        MessageBox.Show(colName + " must be a valid number.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true;
+                    }
+                }
+                else if (colName == "Expiry")
+                {
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^(0[1-9]|1[0-2])\/\d{4}$"))
+                    {
+                        MessageBox.Show("Expiry date must be in MM/yyyy format.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Validation error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void DgvBillItems_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            try
             {
-                string colName = dgvBillItems.Columns[e.ColumnIndex].Name;
-                if (colName == "Qty" || colName == "Rate" || colName == "Discount")
+                if (e.RowIndex >= 0)
                 {
-                    var row = dgvBillItems.Rows[e.RowIndex];
-                    
-                    int qty = 0;
-                    int.TryParse(Convert.ToString(row.Cells["Qty"].Value), out qty);
-                    
-                    decimal rate = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Rate"].Value), out rate);
-                    
-                    decimal discount = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Discount"].Value), out discount);
-                    
-                    row.Cells["Amount"].Value = (qty * rate) - discount;
-                    UpdateBillTotal();
+                    string colName = dgvBillItems.Columns[e.ColumnIndex].Name;
+                    if (colName == "Qty" || colName == "Rate" || colName == "Discount")
+                    {
+                        var row = dgvBillItems.Rows[e.RowIndex];
+                        
+                        int qty = 0;
+                        int.TryParse(Convert.ToString(row.Cells["Qty"].Value), out qty);
+                        
+                        decimal rate = 0;
+                        decimal.TryParse(Convert.ToString(row.Cells["Rate"].Value), out rate);
+                        
+                        decimal discount = 0;
+                        decimal.TryParse(Convert.ToString(row.Cells["Discount"].Value), out discount);
+                        
+                        row.Cells["Amount"].Value = (qty * rate) - discount;
+                        UpdateBillTotal();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error calculating amount: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void UpdateBillTotal()
         {
-            decimal total = 0;
-            foreach (DataGridViewRow row in dgvBillItems.Rows)
+            try
             {
-                if (!row.IsNewRow)
+                decimal total = 0;
+                foreach (DataGridViewRow row in dgvBillItems.Rows)
                 {
-                    decimal amt = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Amount"].Value), out amt);
-                    total += amt;
+                    if (!row.IsNewRow)
+                    {
+                        decimal amt = 0;
+                        decimal.TryParse(Convert.ToString(row.Cells["Amount"].Value), out amt);
+                        total += amt;
+                    }
                 }
+                lblTotal.Text = "Total: " + total.ToString("0.00");
+                CalculateBalance();
             }
-            lblTotal.Text = "Total: " + total.ToString("0.00");
-            CalculateBalance();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error updating total: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void txtGiven_TextChanged(object sender, EventArgs e)
@@ -81,14 +143,21 @@ namespace CentralMed.UI
 
         private void CalculateBalance()
         {
-            decimal total = 0;
-            decimal.TryParse(lblTotal.Text.Replace("Total: ", ""), out total);
-            
-            decimal given = 0;
-            decimal.TryParse(txtGiven.Text, out given);
-            
-            decimal balance = given - total;
-            txtBalance.Text = balance.ToString("0.00");
+            try
+            {
+                decimal total = 0;
+                decimal.TryParse(lblTotal.Text.Replace("Total: ", ""), out total);
+                
+                decimal given = 0;
+                decimal.TryParse(txtGiven.Text, out given);
+                
+                decimal balance = given - total;
+                txtBalance.Text = balance.ToString("0.00");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error calculating balance: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private bool SaveBillData()
@@ -101,21 +170,66 @@ namespace CentralMed.UI
                 string bNo = txtBillNo.Text;
                 DateTime bDate = dtpDate.Value;
 
+                bool hasItems = false;
+
                 foreach (DataGridViewRow row in dgvBillItems.Rows)
                 {
                     if (row.IsNewRow) continue;
+                    hasItems = true;
 
-                    int qty = 0;
-                    int.TryParse(Convert.ToString(row.Cells["Qty"].Value), out qty);
-                    
-                    decimal rate = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Rate"].Value), out rate);
-                    
-                    decimal amt = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Amount"].Value), out amt);
+                    string drugName = Convert.ToString(row.Cells["DrugName"].Value ?? "").Trim();
+                    string scheme = Convert.ToString(row.Cells["Scheme"].Value ?? "").Trim();
+                    string manufacturer = Convert.ToString(row.Cells["Manufacturer"].Value ?? "").Trim();
+                    string batchNo = Convert.ToString(row.Cells["BatchNo"].Value ?? "").Trim();
+                    string expiry = Convert.ToString(row.Cells["Expiry"].Value ?? "").Trim();
+                    string strQty = Convert.ToString(row.Cells["Qty"].Value ?? "").Trim();
+                    string strRate = Convert.ToString(row.Cells["Rate"].Value ?? "").Trim();
+                    string strDiscount = Convert.ToString(row.Cells["Discount"].Value ?? "").Trim();
+                    string strAmount = Convert.ToString(row.Cells["Amount"].Value ?? "").Trim();
 
-                    decimal discount = 0;
-                    decimal.TryParse(Convert.ToString(row.Cells["Discount"].Value), out discount);
+                    if (string.IsNullOrEmpty(drugName) || string.IsNullOrEmpty(scheme) || 
+                        string.IsNullOrEmpty(manufacturer) || string.IsNullOrEmpty(batchNo) || 
+                        string.IsNullOrEmpty(expiry) || string.IsNullOrEmpty(strQty) || 
+                        string.IsNullOrEmpty(strRate) || string.IsNullOrEmpty(strDiscount) || 
+                        string.IsNullOrEmpty(strAmount))
+                    {
+                        MessageBox.Show("All bill item fields except Patient Name and Doctor Name are mandatory to save.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+
+                    int qty;
+                    if (!int.TryParse(strQty, out qty))
+                    {
+                        MessageBox.Show("Quantity must be a valid integer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                    
+                    decimal rate;
+                    if (!decimal.TryParse(strRate, out rate))
+                    {
+                        MessageBox.Show("Rate must be a valid number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                    
+                    decimal amt;
+                    if (!decimal.TryParse(strAmount, out amt))
+                    {
+                        MessageBox.Show("Amount must be a valid number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+
+                    decimal discount;
+                    if (!decimal.TryParse(strDiscount, out discount))
+                    {
+                        MessageBox.Show("Discount must be a valid number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(expiry, @"^(0[1-9]|1[0-2])\/\d{4}$"))
+                    {
+                        MessageBox.Show("Expiry date must be in MM/yyyy format.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
 
                     var item = new BillingRecord
                     {
@@ -124,11 +238,11 @@ namespace CentralMed.UI
                         BillNo = bNo,
                         BillDate = bDate,
                         Qty = qty,
-                        DrugName = Convert.ToString(row.Cells["DrugName"].Value ?? ""),
-                        Scheme = Convert.ToString(row.Cells["Scheme"].Value ?? ""),
-                        Manufacturer = Convert.ToString(row.Cells["Manufacturer"].Value ?? ""),
-                        BatchNo = Convert.ToString(row.Cells["BatchNo"].Value ?? ""),
-                        ExpiryDate = Convert.ToString(row.Cells["Expiry"].Value ?? ""),
+                        DrugName = drugName,
+                        Scheme = scheme,
+                        Manufacturer = manufacturer,
+                        BatchNo = batchNo,
+                        ExpiryDate = expiry,
                         Rate = rate,
                         Discount = discount,
                         Amount = amt
@@ -137,12 +251,18 @@ namespace CentralMed.UI
                     records.Add(item);
                 }
 
+                if (!hasItems)
+                {
+                    MessageBox.Show("Please add at least one item to the bill before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
                 _billingService.SaveRecords(records);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error saving data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
