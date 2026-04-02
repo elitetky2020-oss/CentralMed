@@ -75,6 +75,14 @@ namespace CentralMed.UI
                         e.Cancel = true;
                     }
                 }
+                else if (colName == "DrugName" || colName == "Manufacturer")
+                {
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[a-zA-Z0-9\s]*$"))
+                    {
+                        MessageBox.Show("Special characters are not allowed in " + colName + ".", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        e.Cancel = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -170,6 +178,18 @@ namespace CentralMed.UI
                 string bNo = txtBillNo.Text;
                 DateTime bDate = dtpDate.Value;
 
+                if (!string.IsNullOrEmpty(pName) && !System.Text.RegularExpressions.Regex.IsMatch(pName, @"^[a-zA-Z0-9\s]*$"))
+                {
+                    MessageBox.Show("Special characters are not allowed in Patient Name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                if (!string.IsNullOrEmpty(dName) && !System.Text.RegularExpressions.Regex.IsMatch(dName, @"^[a-zA-Z0-9\s]*$"))
+                {
+                    MessageBox.Show("Special characters are not allowed in Doctor Name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
                 bool hasItems = false;
 
                 foreach (DataGridViewRow row in dgvBillItems.Rows)
@@ -228,6 +248,18 @@ namespace CentralMed.UI
                     if (!System.Text.RegularExpressions.Regex.IsMatch(expiry, @"^(0[1-9]|1[0-2])\/\d{4}$"))
                     {
                         MessageBox.Show("Expiry date must be in MM/yyyy format.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(drugName, @"^[a-zA-Z0-9\s]*$"))
+                    {
+                        MessageBox.Show("Special characters are not allowed in Drug Name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(manufacturer, @"^[a-zA-Z0-9\s]*$"))
+                    {
+                        MessageBox.Show("Special characters are not allowed in Manufacturer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return false;
                     }
 
