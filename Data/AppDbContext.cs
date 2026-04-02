@@ -19,15 +19,43 @@ namespace CentralMed.Data
             {
                 try
                 {
-                    this.Database.ExecuteSqlCommand("ALTER TABLE [BillingRecord] ADD COLUMN [Discount] DECIMAL(18,2) NOT NULL DEFAULT 0;");
-                }
-                catch { }
+                    var columns = new System.Collections.Generic.List<string>();
+                    using (var cmd = this.Database.Connection.CreateCommand())
+                    {
+                        bool wasOpen = cmd.Connection.State == System.Data.ConnectionState.Open;
+                        if (!wasOpen) cmd.Connection.Open();
 
-                try
-                {
-                    this.Database.ExecuteSqlCommand("ALTER TABLE [BillingRecord] RENAME COLUMN [Scheme] TO [Schedule];");
+                        cmd.CommandText = "PRAGMA table_info([BillingRecord]);";
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                columns.Add(Convert.ToString(reader["name"]).ToLower());
+                            }
+                        }
+
+                        if (columns.Count > 0)
+                        {
+                            if (!columns.Contains("discount"))
+                            {
+                                cmd.CommandText = "ALTER TABLE [BillingRecord] ADD COLUMN [Discount] DECIMAL(18,2) NOT NULL DEFAULT 0;";
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            if (columns.Contains("scheme"))
+                            {
+                                cmd.CommandText = "ALTER TABLE [BillingRecord] RENAME COLUMN [Scheme] TO [Schedule];";
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        if (!wasOpen) cmd.Connection.Close();
+                    }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Migration check error: " + ex.Message);
+                }
 
                 try
                 {
