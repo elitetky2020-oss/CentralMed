@@ -178,6 +178,19 @@ namespace CentralMed.UI
                 string bNo = txtBillNo.Text;
                 DateTime bDate = dtpDate.Value;
 
+                if (string.IsNullOrWhiteSpace(txtGiven.Text))
+                {
+                    MessageBox.Show("Amount given cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                decimal givenAmount;
+                if (!decimal.TryParse(txtGiven.Text, out givenAmount))
+                {
+                    MessageBox.Show("Amount given must be a valid number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
                 if (!string.IsNullOrEmpty(pName) && !System.Text.RegularExpressions.Regex.IsMatch(pName, @"^[a-zA-Z0-9\s]*$"))
                 {
                     MessageBox.Show("Special characters are not allowed in Patient Name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
